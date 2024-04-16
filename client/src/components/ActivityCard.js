@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
 function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) {
-  const { id, title, picture, date, duration } = activity;
-  const [updatedDate, setUpdatedDate] = useState(date);
+  const { id, title, picture, description, duration } = activity;
+  const [updatedDescription, setUpdatedDescription] = useState(description);
   const [updatedDuration, setUpdatedDuration] = useState(duration);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedActivity = {
       ...activity,
-      date: e.target.date.value,
+      description: e.target.description.value,
       duration: parseInt(updatedDuration) // Convert duration to integer
     };
     handleUpdate(updatedActivity);
@@ -45,17 +45,17 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
       <img className="activity-image" src={picture} alt={title} />
       <div className="activity-details">
         <h4 className="activity-title">{title}</h4>
-        <p className="activity-date">Date: {date}</p>
-        <p className="activity-duration">Duration: {duration}</p>
+        <p className="activity-description">Description: {description}</p>
+        <p className="activity-duration">Duration: {duration} minutes</p>
       </div>
       <form className="activity-form" onSubmit={handleSubmit}>
         <input
           className="form-input"
           type="text"
-          placeholder="New date..."
-          name="date"
-          value={updatedDate}
-          onChange={(e) => setUpdatedDate(e.target.value)}
+          placeholder="New description..."
+          name="description"
+          value={updatedDescription}
+          onChange={(e) => setUpdatedDescription(e.target.value)}
         />
         <input
           className="form-input"

@@ -3,7 +3,7 @@ import { useState } from "react";
 function NewActivityForm({ onAddActivity }) {
   const [title, setTitle] = useState("");
   const [picture, setPicture] = useState("");
-  const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
 
   function handleSubmit(e) {
@@ -16,7 +16,7 @@ function NewActivityForm({ onAddActivity }) {
       body: JSON.stringify({
         title: title,
         picture: picture,
-        date: date,
+        description: description,
         duration: duration,
       }),
     })
@@ -44,10 +44,10 @@ function NewActivityForm({ onAddActivity }) {
         />
         <input
           type="text"
-          name="date"
-          placeholder="Date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          name="description"
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <input
           type="number"

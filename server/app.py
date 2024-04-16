@@ -7,7 +7,7 @@ from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
-from datetime import datetime
+
 
 
 # Local imports
@@ -46,13 +46,9 @@ class FitnessActivities(Resource):
     def post(self):
         data = request.get_json()
 
-        # Convert date string to Python date object
-        if 'date' in data:
-            data['date'] = datetime.strptime(data['date'], '%Y-%m-%d').date()
-
         new_activity = FitnessActivity(
             title=data['title'],
-            date=data['date'],
+            description=data['description'],
             duration=data['duration'],
             picture=data['picture'],
         )
@@ -75,10 +71,6 @@ class FitnessActivityByID(Resource):
     def patch(self, id):
         activity = FitnessActivity.query.filter_by(id=id).first()
         data = request.get_json()
-
-        # Convert date string to Python date object
-        if 'date' in data:
-            data['date'] = datetime.strptime(data['date'], '%Y-%m-%d').date()
 
         for key, value in data.items():
             setattr(activity, key, value)

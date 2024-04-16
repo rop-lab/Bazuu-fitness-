@@ -19,9 +19,9 @@ class FitnessActivity(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
-    date = db.Column(db.Date)
+    description = db.Column(db.String)
     duration = db.Column(db.Integer)
     picture = db.Column(db.String)
 
     def __repr__(self):
-        return f'<FitnessActivity {self.title} | Date: {self.date} | Duration: {self.duration} minutes>'
+        return f'<FitnessActivity {self.title} | Description: {self.description} | Duration: {self.duration} minutes>'
