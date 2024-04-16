@@ -1,7 +1,245 @@
-:root {
-  --bg: #282c34;
-  --header: #fff;
-  --link: #61dafb;
-  --text: hsla(0, 0%, 100%, 0.88);
+/* app.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Farsan&family=Pirata+One&display=swap');
+
+/* General styles */
+body {
+  font-family: 'Farsan', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f7f7; /* Light gray background */
 }
 
+/* Header styles */
+.header {
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 85px;
+}
+
+.header-section {
+  flex-grow: 1; /* Expands to fill available space */
+  display: flex;
+  justify-content: center;
+}
+
+.header-title {
+  font-family: "Pirata One", system-ui;
+  font-size: 40px;
+}
+
+.logo {
+  font-size: 32px;
+  margin-left: 5px;
+}
+
+/* Navigation styles */
+.head-right-section {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 30px;
+  margin-right: 30px;
+  font-size: 22px
+}
+
+.nav-link:hover {
+  color: #ffcc00; /* Change color on hover */
+}
+
+/* Activity Page styles */
+.activity-page {
+  display: flex;
+  padding: 20px; /* Add padding for better spacing */
+}
+
+.new-activity-form-container {
+  flex: 1;
+  margin-right: 20px;
+  background-color: #fff; /* White background for form container */
+  padding: 20px; /* Add padding for better spacing */
+  border-radius: 8px; /* Add border radius for rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+  height: auto; /* Adjust height to fit contents */
+  max-height: 80vh; /* Set maximum height */
+  overflow-y: auto; /* Add vertical scroll if needed */
+}
+
+.activity-content {
+  flex: 4;
+  background-color: #fff; /* White background for activity content */
+  padding-top: 15px;
+  padding-left: 20px; /* Add padding for better spacing */
+  padding-right: 20px;
+  border-radius: 8px; /* Add border radius for rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+  max-height: 80vh; /* Set maximum height */
+  overflow-y: auto; /* Add vertical scroll if needed */
+}
+
+
+/* New Activity Form styles */
+.new-activity-form {
+  margin-bottom: 20px; /* Add margin at the bottom for better separation */
+}
+
+.new-activity-form h2 {
+  margin-top: 0; /* Remove default margin for h2 */
+  margin-bottom: 20px; /* Add margin at the bottom for better separation */
+}
+
+.new-activity-form input {
+ 
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.new-activity-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.new-activity-form button:hover {
+  background-color: #555; /* Darken color on hover */
+}
+
+/* Search styles */
+.searchbar {
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin-bottom: 20px; /* Add some spacing between the search bar and other content */
+}
+
+.searchbar label {
+  font-weight: bold;
+  font-size: 19px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.searchbar input[type="text"] {
+  width: 95%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Optionally, you can add hover and focus styles for the input field */
+.searchbar input[type="text"]:hover,
+.searchbar input[type="text"]:focus {
+  border-color: #999;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Activity List styles */
+.cards {
+  list-style-type: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Activity Card styles */
+.activity-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increased box shadow */
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.activity-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.activity-details {
+  margin-top: 10px;
+}
+
+.activity-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.activity-date,
+.activity-duration {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.activity-form {
+  margin-top: 5px; /* Reduce margin */
+}
+
+.form-input {
+  width: 100%;
+  padding: 6px; /* Reduce padding */
+  margin-bottom: 6px; /* Reduce margin */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 12px; /* Reduce font size */
+}
+
+.form-button {
+  background-color: #333;
+  color: #fff;
+}
+
+.form-button:hover {
+  background-color: #555;
+}
+
+.form-button,
+.delete-button {
+  width: calc(50% - 5px); /* Set width to half of the container width with some spacing */
+  padding: 7px; /* Keep the same padding */
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 12px; /* Keep the same font size */
+  cursor: pointer;
+}
+
+.form-button:hover,
+.delete-button:hover {
+  background-color: #555; /* Darken color on hover */
+}
+.delete-button {
+  background-color: #dc3545;
+  color: #fff;
+ 
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
