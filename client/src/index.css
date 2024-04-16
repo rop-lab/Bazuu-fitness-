@@ -98,7 +98,7 @@ body {
 }
 
 .new-activity-form input {
- 
+  width:90%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;

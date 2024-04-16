@@ -1,19 +1,28 @@
 import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) {
   const { id, title, picture, description, duration } = activity;
   const [showUpdateForm, setShowUpdateForm] = useState(false); // State to track whether to show the update form
-  const [updatedDescription, setUpdatedDescription] = useState(description);
-  const [updatedDuration, setUpdatedDuration] = useState(duration);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const initialValues = {
+    description: description,
+    duration: duration.toString(),
+  };
+
+  const validationSchema = Yup.object().shape({
+    description: Yup.string().required("Description is required"),
+    duration: Yup.number().required("Duration is required").positive("Duration must be positive"),
+  });
+
+  const handleSubmit = async (values) => {
     const updatedActivity = {
       ...activity,
-      description: e.target.description.value,
-      duration: parseInt(updatedDuration) // Convert duration to integer
+      description: values.description,
+      duration: parseInt(values.duration) // Convert duration to integer
     };
-    handleUpdate(updatedActivity);
+    await handleUpdate(updatedActivity);
   };
 
   const handleUpdate = async (updatedActivity) => {
@@ -40,40 +49,34 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
   };
 
   return (
-    <li className="activity-card">
-      <img className="activity-image" src={picture} alt={title} />
-      <div className="activity-details">
-        <h4 className="activity-title">{title}</h4>
-        <p className="activity-description">Description: {description}</p>
-        <p className="activity-duration">Duration: {duration} minutes</p>
-      </div>
-      {showUpdateForm ? (
-        <form className="activity-form" onSubmit={handleSubmit}>
-          <input
-            className="form-input"
-            type="text"
-            placeholder="New description..."
-            name="description"
-            value={updatedDescription}
-            onChange={(e) => setUpdatedDescription(e.target.value)}
-          />
-          <input
-            className="form-input"
-            type="number"
-            placeholder="New duration..."
-            name="duration"
-            value={updatedDuration}
-            onChange={(e) => setUpdatedDuration(e.target.value)}
-          />
-          <div className="button-container">
-            <button className="form-button" type="submit">Update</button>
-            <button className="delete-button" onClick={handleDeleteClick}>Delete</button>
-          </div>
-        </form>
-      ) : (
-        <button className="form-button" onClick={() => setShowUpdateForm(true)}>Update or Delete</button>
-      )}
-    </li>
+    <div>
+      <li className="activity-card">
+        <img className="activity-image" src={picture} alt={title} />
+        <div className="activity-details">
+          <h4 className="activity-title">{title}</h4>
+          <p className="activity-description">Description: {description}</p>
+          <p className="activity-duration">Duration: {duration} minutes</p>
+        </div>
+        {showUpdateForm ? (
+          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+            {({ isSubmitting }) => (
+              <Form className="activity-form">
+                <Field className="form-input" type="text" name="description" placeholder="New description..." />
+                <ErrorMessage name="description" component="div" className="error-message" />
+                <Field className="form-input" type="number" name="duration" placeholder="New duration..." />
+                <ErrorMessage name="duration" component="div" className="error-message" />
+                <div className="button-container">
+                  <button className="form-button" type="submit" disabled={isSubmitting}>Update</button>
+                  <button className="delete-button" onClick={handleDeleteClick}>Delete</button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        ) : (
+          <button className="form-button" onClick={() => setShowUpdateForm(true)}>Update or Delete</button>
+        )}
+      </li>
+    </div>
   );
 }
 
