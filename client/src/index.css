@@ -196,7 +196,7 @@ body {
 }
 
 .form-input {
-  width: 100%;
+  width: 90%;
   padding: 6px; /* Reduce padding */
   margin-bottom: 6px; /* Reduce margin */
   border: 1px solid #ccc;

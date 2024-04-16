@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) {
   const { id, title, picture, description, duration } = activity;
+  const [showUpdateForm, setShowUpdateForm] = useState(false); // State to track whether to show the update form
   const [updatedDescription, setUpdatedDescription] = useState(description);
   const [updatedDuration, setUpdatedDuration] = useState(duration);
 
@@ -16,9 +17,6 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
   };
 
   const handleUpdate = async (updatedActivity) => {
-    // No need for datetime module in JavaScript
-    // updatedActivity.date = datetime.strptime(updatedActivity.date, '%Y-%m-%d');
-  
     const response = await fetch(`/fitness-activities/${id}`, {
       method: "PATCH",
       headers: {
@@ -28,6 +26,7 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
     });
     const data = await response.json();
     handleUpdateActivity(data);
+    setShowUpdateForm(false); // Hide the update form after submission
   };
 
   const handleDeleteClick = async () => {
@@ -36,7 +35,7 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
     });
     if (response.ok) {
       handleDeleteActivity(id);
-      alert("Deleted Successfully 🌼");
+      alert("Deleted Successfully");
     }
   };
 
@@ -48,28 +47,32 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
         <p className="activity-description">Description: {description}</p>
         <p className="activity-duration">Duration: {duration} minutes</p>
       </div>
-      <form className="activity-form" onSubmit={handleSubmit}>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="New description..."
-          name="description"
-          value={updatedDescription}
-          onChange={(e) => setUpdatedDescription(e.target.value)}
-        />
-        <input
-          className="form-input"
-          type="number"
-          placeholder="New duration..."
-          name="duration"
-          value={updatedDuration}
-          onChange={(e) => setUpdatedDuration(e.target.value)}
-        />
-        <div className="button-container">
-          <button className="form-button" type="submit">Update</button>
-          <button className="delete-button" onClick={handleDeleteClick}>Delete</button>
-        </div>
-      </form>
+      {showUpdateForm ? (
+        <form className="activity-form" onSubmit={handleSubmit}>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="New description..."
+            name="description"
+            value={updatedDescription}
+            onChange={(e) => setUpdatedDescription(e.target.value)}
+          />
+          <input
+            className="form-input"
+            type="number"
+            placeholder="New duration..."
+            name="duration"
+            value={updatedDuration}
+            onChange={(e) => setUpdatedDuration(e.target.value)}
+          />
+          <div className="button-container">
+            <button className="form-button" type="submit">Update</button>
+            <button className="delete-button" onClick={handleDeleteClick}>Delete</button>
+          </div>
+        </form>
+      ) : (
+        <button className="form-button" onClick={() => setShowUpdateForm(true)}>Update or Delete</button>
+      )}
     </li>
   );
 }
