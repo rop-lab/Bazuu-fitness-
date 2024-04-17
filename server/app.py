@@ -100,6 +100,12 @@ class Users(Resource):
     def post(self):
         data = request.get_json()
 
+        # Check if the email already exists
+        existing_user = User.query.filter_by(email=data['email']).first()
+        if existing_user:
+            return make_response(jsonify({'error': 'Email already exists'}), 400)
+
+        # Create a new user
         new_user = User(
             username=data['username'],
             email=data['email'],
@@ -107,12 +113,14 @@ class Users(Resource):
             picture=data.get('picture')  # Optionally allow picture to be provided
         )
 
+        # Add the new user to the database
         db.session.add(new_user)
         db.session.commit()
 
         return make_response(jsonify(new_user.to_dict()), 201)
 
 api.add_resource(Users, '/users')
+
 
 
 class UserByID(Resource):
