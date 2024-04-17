@@ -1,14 +1,22 @@
-import { BrowserRouter as Router } from 'react-router-dom'; // Import BrowserRouter as Router
-
+// App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './Header';
 import ActivityPage from './ActivityPage';
+import Login from './Login'; // Import the Login component
+import SignUp from './SignUp';
 
 function App() {
   return (
-    <Router> {/* Wrap your entire application with the Router component */}
+    <Router>
       <div className="app">
         <Header />
-        <ActivityPage />
+        <Switch>
+          <Route path="/" exact component={ActivityPage} />
+          <Route path="/login" component={Login} /> 
+          <Route path="/sign-up" component={SignUp} /> 
+          {/* Add more routes here */}
+        </Switch>
       </div>
     </Router>
   );

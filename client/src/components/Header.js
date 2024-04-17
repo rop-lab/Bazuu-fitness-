@@ -12,6 +12,7 @@ function Header() {
         </h1>
       </div>
       <div className="head-right-section">
+        <Link to="/" className="nav-link">Home</Link>
         <Link to="/login" className="nav-link">Login</Link>
         <Link to="/sign-up" className="nav-link">Sign Up</Link>
       </div>
