@@ -3,6 +3,7 @@ import create from 'zustand';
 
 const useAuthStore = create((set) => ({
   isLoggedIn: false,
+  userId: null, // Add userId field
   username: '',
   userPicture: '', // Add userPicture field
   checkSession: async () => {
@@ -10,9 +11,9 @@ const useAuthStore = create((set) => ({
       const response = await fetch('/check_session');
       if (response.ok) {
         const user = await response.json();
-        set({ isLoggedIn: true, username: user.username, userPicture: user.picture }); // Store user's picture
+        set({ isLoggedIn: true, userId: user.userId, username: user.username, userPicture: user.picture }); // Store user's id, username, and picture
       } else {
-        set({ isLoggedIn: false, username: '', userPicture: '' });
+        set({ isLoggedIn: false, userId: null, username: '', userPicture: '' });
       }
     } catch (error) {
       console.error('Error checking session:', error);
@@ -30,7 +31,7 @@ const useAuthStore = create((set) => ({
 
       if (response.ok) {
         const user = await response.json();
-        set({ isLoggedIn: true, username: user.username, userPicture: user.picture }); // Store user's picture
+        set({ isLoggedIn: true, userId: user.userId, username: user.username, userPicture: user.picture }); // Store user's id, username, and picture
         history.push('/');
       } else {
         // If login fails, handle error (e.g., show error message)
@@ -47,7 +48,7 @@ const useAuthStore = create((set) => ({
         method: 'DELETE',
       });
       if (response.ok) {
-        set({ isLoggedIn: false, username: '', userPicture: '' }); // Clear user's picture
+        set({ isLoggedIn: false, userId: null, username: '', userPicture: '' }); // Clear user's id, username, and picture
         history.push('/');
       } else {
         console.error('Logout failed');

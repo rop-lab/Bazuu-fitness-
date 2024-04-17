@@ -149,10 +149,13 @@ class UserFitnessActivities(Resource):
         return make_response(jsonify(user_fitness_activities), 200)
 
     def post(self):
+        if 'user_id' not in session:
+            return make_response(jsonify({'error': 'User not logged in'}), 401)
+
         data = request.get_json()
 
         new_user_fitness_activity = UserFitnessActivity(
-            user_id=data['user_id'],
+            user_id=session['user_id'],  # Assuming you store user_id in the session
             fitness_activity_id=data['fitness_activity_id'],
             access=data['access']
         )
