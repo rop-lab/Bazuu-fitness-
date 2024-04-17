@@ -22,19 +22,24 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
       description: values.description,
       duration: parseInt(values.duration) // Convert duration to integer
     };
-    await handleUpdate(updatedActivity);
-  };
-
-  const handleUpdate = async (updatedActivity) => {
-    const response = await fetch(`/fitness-activities/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedActivity),
-    });
-    const data = await response.json();
-    handleUpdateActivity(data);
+    try {
+      const response = await fetch(`/fitness-activities/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedActivity),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        handleUpdateActivity(data);
+        
+      } else if (response.status === 403) {
+        alert("You are not the owner of this activity. You cannot update it."); // Display alert for FORBIDDEN error
+      } 
+    } catch (error) {
+      console.error("Error:", error);
+    }
     setShowUpdateForm(false); // Hide the update form after submission
   };
 
@@ -45,7 +50,10 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
     if (response.ok) {
       handleDeleteActivity(id);
       alert("Deleted Successfully");
+    } else if (response.status === 403) {
+      alert("You are not the owner of this activity. You cannot delete it."); // Display alert for FORBIDDEN error
     }
+    setShowUpdateForm(false);
   };
 
   return (

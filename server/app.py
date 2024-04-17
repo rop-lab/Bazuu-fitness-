@@ -71,10 +71,24 @@ class FitnessActivityByID(Resource):
         return make_response(jsonify(activity), 200)
     
     def patch(self, id):
+        # Check if the user is logged in
+        if 'user_id' not in session:
+            return make_response(jsonify({'error': 'User not logged in'}), 401)
+        
+        # Get the user ID from the session
+        user_id = session['user_id']
+
+        # Get the fitness activity
         activity = FitnessActivity.query.filter_by(id=id).first()
         if not activity:
             return make_response(jsonify({'error': 'Fitness activity not found'}), 404)
 
+        # Check if the user has access to update this fitness activity
+        user_fitness_activity = UserFitnessActivity.query.filter_by(user_id=user_id, fitness_activity_id=id).first()
+        if not user_fitness_activity or user_fitness_activity.access != 'owner':
+            return make_response(jsonify({'error': 'Unauthorized to update this fitness activity'}), 403)
+
+        # Extract data from the request
         data = request.get_json()
 
         # Update the attributes of the activity
@@ -89,12 +103,29 @@ class FitnessActivityByID(Resource):
         return make_response(jsonify(activity.to_dict()), 200)
     
     def delete(self, id):
-        activity = FitnessActivity.query.filter_by(id=id).first()
+        # Check if the user is logged in
+        if 'user_id' not in session:
+            return make_response(jsonify({'error': 'User not logged in'}), 401)
+        
+        # Get the user ID from the session
+        user_id = session['user_id']
 
+        # Get the fitness activity
+        activity = FitnessActivity.query.filter_by(id=id).first()
+        if not activity:
+            return make_response(jsonify({'error': 'Fitness activity not found'}), 404)
+
+        # Check if the user has access to delete this fitness activity
+        user_fitness_activity = UserFitnessActivity.query.filter_by(user_id=user_id, fitness_activity_id=id).first()
+        if not user_fitness_activity or user_fitness_activity.access != 'owner':
+            return make_response(jsonify({'error': 'Unauthorized to delete this fitness activity'}), 403)
+
+        # Delete the activity from the database
         db.session.delete(activity)
         db.session.commit()
 
         return '', 204
+
 
 
 api.add_resource(FitnessActivityByID, '/fitness-activities/<int:id>')
