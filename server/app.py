@@ -11,7 +11,7 @@ from flask_restful import Api, Resource
 
 
 # Local imports
-from models import FitnessActivity, db
+from models import FitnessActivity, db, User, UserFitnessActivity
 
 # Instantiate app, set attributes
 app = Flask(__name__)
@@ -89,6 +89,108 @@ class FitnessActivityByID(Resource):
 
 
 api.add_resource(FitnessActivityByID, '/fitness-activities/<int:id>')
+
+class Users(Resource):
+    def get(self):
+        users = [user.to_dict() for user in User.query.all()]
+        return make_response(jsonify(users), 200)
+
+    def post(self):
+        data = request.get_json()
+
+        new_user = User(
+            username=data['username'],
+            email=data['email'],
+            password=data['password'],
+            picture=data.get('picture')  # Optionally allow picture to be provided
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return make_response(jsonify(new_user.to_dict()), 201)
+
+
+api.add_resource(Users, '/users')
+
+
+class UserByID(Resource):
+    def get(self, id):
+        user = User.query.filter_by(id=id).first().to_dict()
+        return make_response(jsonify(user), 200)
+
+    def patch(self, id):
+        user = User.query.filter_by(id=id).first()
+        data = request.get_json()
+
+        for key, value in data.items():
+            setattr(user, key, value)
+
+        db.session.commit()
+
+        return make_response(jsonify(user.to_dict()), 200)
+
+    def delete(self, id):
+        user = User.query.filter_by(id=id).first()
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return '', 204
+
+
+api.add_resource(UserByID, '/users/<int:id>')
+
+class UserFitnessActivities(Resource):
+    def get(self):
+        user_fitness_activities = [ufa.to_dict() for ufa in UserFitnessActivity.query.all()]
+        return make_response(jsonify(user_fitness_activities), 200)
+
+    def post(self):
+        data = request.get_json()
+
+        new_user_fitness_activity = UserFitnessActivity(
+            user_id=data['user_id'],
+            fitness_activity_id=data['fitness_activity_id'],
+            access=data['access']
+        )
+
+        db.session.add(new_user_fitness_activity)
+        db.session.commit()
+
+        return make_response(jsonify(new_user_fitness_activity.to_dict()), 201)
+
+
+api.add_resource(UserFitnessActivities, '/user-fitness-activities')
+
+
+class UserFitnessActivityByID(Resource):
+    def get(self, id):
+        user_fitness_activity = UserFitnessActivity.query.filter_by(id=id).first().to_dict()
+        return make_response(jsonify(user_fitness_activity), 200)
+
+    def patch(self, id):
+        user_fitness_activity = UserFitnessActivity.query.filter_by(id=id).first()
+        data = request.get_json()
+
+        for key, value in data.items():
+            setattr(user_fitness_activity, key, value)
+
+        db.session.commit()
+
+        return make_response(jsonify(user_fitness_activity.to_dict()), 200)
+
+    def delete(self, id):
+        user_fitness_activity = UserFitnessActivity.query.filter_by(id=id).first()
+
+        db.session.delete(user_fitness_activity)
+        db.session.commit()
+
+        return '', 204
+
+
+api.add_resource(UserFitnessActivityByID, '/user-fitness-activities/<int:id>')
+
 
 
 if __name__ == '__main__':
