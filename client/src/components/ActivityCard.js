@@ -67,7 +67,7 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
                 <ErrorMessage name="duration" component="div" className="error-message" />
                 <div className="button-container">
                   <button className="form-button" type="submit" disabled={isSubmitting}>Update</button>
-                  <button className="delete-button" onClick={handleDeleteClick}>Delete</button>
+                  <button type="button" className="delete-button" onClick={handleDeleteClick}>Delete</button>
                 </div>
               </Form>
             )}

@@ -72,11 +72,18 @@ class FitnessActivityByID(Resource):
     
     def patch(self, id):
         activity = FitnessActivity.query.filter_by(id=id).first()
+        if not activity:
+            return make_response(jsonify({'error': 'Fitness activity not found'}), 404)
+
         data = request.get_json()
 
-        for key, value in data.items():
-            setattr(activity, key, value)
+        # Update the attributes of the activity
+        activity.title = data.get('title', activity.title)
+        activity.description = data.get('description', activity.description)
+        activity.duration = data.get('duration', activity.duration)
+        activity.picture = data.get('picture', activity.picture)
 
+        # Commit the changes to the database
         db.session.commit()
 
         return make_response(jsonify(activity.to_dict()), 200)
