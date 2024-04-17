@@ -43,18 +43,30 @@ body {
   align-items: center;
 }
 
-.nav-link {
+.nav-link,
+.logout-button {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
   margin-left: 30px;
   margin-right: 30px;
-  font-size: 22px
+  font-size: 22px;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.logout-button:hover {
   color: #ffcc00; /* Change color on hover */
 }
+
+.logout-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 22px;
+  font-family: 'Farsan', sans-serif;
+  cursor: pointer; /* Show pointer cursor on hover */
+}
+
 
 /* Activity Page styles */
 .activity-page {

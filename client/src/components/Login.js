@@ -3,10 +3,12 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link, useHistory } from 'react-router-dom';
+import useAuthStore from './authStore';
 
 
 function Login() {
   const history = useHistory();
+  const { login } = useAuthStore();
 
   const initialValues = {
     email: '',
@@ -18,13 +20,17 @@ function Login() {
     password: Yup.string().required('Password is required'),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    // Your login logic here
-    console.log(values);
-
-    // Example: Redirect to home page after successful login
-    history.push('/');
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      await login(values, history);
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
+  
+    setSubmitting(false); // Reset submitting state
   };
+  
+  
 
   return (
     <div className="login-container"> {/* Add class name for container */}

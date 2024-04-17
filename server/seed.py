@@ -26,7 +26,7 @@ if __name__ == '__main__':
                 username=fake.user_name(),
                 email=fake.email(),
                 password=fake.password(),
-                picture=fake.image_url()  # Add a fake picture URL for each user
+                picture="https://picsum.photos/983/458" # Add a fake picture URL for each user
             )
             db.session.add(user)
 

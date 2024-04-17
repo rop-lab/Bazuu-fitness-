@@ -3,10 +3,11 @@
 # Standard library imports
 
 # Remote library imports
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, session
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
+
 
 
 
@@ -17,6 +18,7 @@ from models import FitnessActivity, db, User, UserFitnessActivity
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'secret_key'
 app.json.compact = False
 
 
@@ -190,6 +192,47 @@ class UserFitnessActivityByID(Resource):
 
 
 api.add_resource(UserFitnessActivityByID, '/user-fitness-activities/<int:id>')
+
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        
+        if not email:
+            return {'message': 'Email is required'}, 400
+        
+        # Mock logic to find user by username
+        user = User.query.filter_by(email=email).first()
+        if user:
+            session['user_id'] = user.id
+            return user.to_dict(), 200  # Return a dictionary instead of a Response object
+        else:
+            return {'message': 'User not found'}, 404
+
+
+class Logout(Resource):
+    def delete(self):
+        if 'user_id' in session:
+            session.pop('user_id')
+        return '', 204
+
+class CheckSession(Resource):
+    def get(self):
+        if 'user_id' in session:
+            user_id = session['user_id']
+            user = User.query.get(user_id)
+            if user:
+                return user.to_dict(), 200  # Return a dictionary instead of a Response object
+            else:
+                return {'message': 'User not found'}, 404
+        else:
+            return {'message': 'Unauthorized'}, 401  # Return a dictionary instead of an empty string
+
+
+# Add resources to the API
+api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
+api.add_resource(CheckSession, '/check_session')
 
 
 
