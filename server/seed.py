@@ -30,6 +30,13 @@ if __name__ == '__main__':
             )
             db.session.add(user)
 
+        dan = User(username='dan',
+                email='danspmunene@gmail.com',
+                password="munene",
+                picture="https://picsum.photos/983/458" # Add a fake picture URL for each user 
+                )
+        db.session.add(dan)
+
         activities_data = [
             {
                 "title": "Push-Ups",

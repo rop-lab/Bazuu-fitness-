@@ -9,8 +9,6 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 
 
-
-
 # Local imports
 from models import FitnessActivity, db, User, UserFitnessActivity
 
@@ -20,7 +18,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'secret_key'
 app.json.compact = False
-
 
 migrate = Migrate(app, db)
 db.init_app(app)
@@ -46,6 +43,9 @@ class FitnessActivities(Resource):
         return make_response(jsonify(activities), 200)
 
     def post(self):
+        if 'user_id' not in session:
+            return make_response(jsonify({'error': 'User not logged in'}), 401)
+        
         data = request.get_json()
 
         new_activity = FitnessActivity(
@@ -103,7 +103,7 @@ class Users(Resource):
         new_user = User(
             username=data['username'],
             email=data['email'],
-            password=data['password'],
+            password=data['password'],  # Use password property
             picture=data.get('picture')  # Optionally allow picture to be provided
         )
 
@@ -111,7 +111,6 @@ class Users(Resource):
         db.session.commit()
 
         return make_response(jsonify(new_user.to_dict()), 201)
-
 
 api.add_resource(Users, '/users')
 
@@ -200,17 +199,17 @@ class Login(Resource):
     def post(self):
         data = request.get_json()
         email = data.get('email')
+        password = data.get('password')
         
-        if not email:
-            return {'message': 'Email is required'}, 400
+        if not email or not password:
+            return {'message': 'Email and password are required'}, 400
         
-        # Mock logic to find user by username
         user = User.query.filter_by(email=email).first()
-        if user:
+        if user and user.check_password(password):
             session['user_id'] = user.id
-            return user.to_dict(), 200  # Return a dictionary instead of a Response object
-        else:
-            return {'message': 'User not found'}, 404
+            return user.to_dict(), 200
+        
+        return {'error': 'Invalid email or password'}, 401
 
 
 class Logout(Resource):

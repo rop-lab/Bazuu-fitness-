@@ -20,14 +20,15 @@ function Login() {
     password: Yup.string().required('Password is required'),
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       await login(values, history);
     } catch (error) {
       console.error('Error occurred:', error);
     }
-  
+    
     setSubmitting(false); // Reset submitting state
+    resetForm();
   };
   
   

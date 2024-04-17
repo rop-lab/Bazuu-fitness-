@@ -37,6 +37,7 @@ const useAuthStore = create((set) => ({
         // If login fails, handle error (e.g., show error message)
         const data = await response.json();
         console.error(data.message); // Log the error message
+        alert('Invalid email or password');
       }
     } catch (error) {
       console.error('Error occurred:', error);

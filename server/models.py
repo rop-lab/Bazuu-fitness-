@@ -5,12 +5,18 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
 import re
+from sqlalchemy.ext.hybrid import hybrid_property
+from flask_bcrypt import Bcrypt
+
+
 
 # Define metadata, instantiate db
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 db = SQLAlchemy(metadata=metadata)
+bcrypt = Bcrypt()
+
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -20,7 +26,7 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False)
+    _password_hash = db.Column(db.String, nullable=False)
     picture = db.Column(db.String, nullable=True)
     # Define relationship with UserFitnessActivity
     user_fitness_activities = db.relationship('UserFitnessActivity', back_populates='user', cascade='all, delete-orphan')
@@ -50,6 +56,18 @@ class User(db.Model, SerializerMixin):
             raise ValueError('Invalid email format')
 
         return email
+    
+    @hybrid_property
+    def password(self):
+        return self._password_hash
+
+    @password.setter
+    def password(self, plaintext_password):
+        self._password_hash = bcrypt.generate_password_hash(plaintext_password).decode('utf-8')
+
+    def check_password(self, plaintext_password):
+        return bcrypt.check_password_hash(self._password_hash, plaintext_password)
+
 
 class FitnessActivity(db.Model, SerializerMixin):
     __tablename__ = 'fitness_activities'
