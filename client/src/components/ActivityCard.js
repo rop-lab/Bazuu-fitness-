@@ -26,12 +26,18 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
   });
 
   const handleSubmit = async (values) => {
-    const updatedActivity = {
-      ...activity,
-      description: values.description,
-      duration: parseInt(values.duration) // Convert duration to integer
-    };
     try {
+      if (!isLoggedIn) {
+        // If user is not logged in, redirect to login page
+        alert("Please log in to update!");
+        history.push('/login');
+        return;
+      }
+      const updatedActivity = {
+        ...activity,
+        description: values.description,
+        duration: parseInt(values.duration) // Convert duration to integer
+      };
       const response = await fetch(`/fitness-activities/${id}`, {
         method: "PATCH",
         headers: {
@@ -42,7 +48,6 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
       const data = await response.json();
       if (response.ok) {
         handleUpdateActivity(data);
-        
       } else if (response.status === 403) {
         alert("You are not the owner of this activity. You cannot update it."); // Display alert for FORBIDDEN error
       } 
@@ -51,11 +56,18 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
     }
     setShowUpdateForm(false); // Hide the update form after submission
   };
+  
 
   const handleDeleteClick = async () => {
+    if (!isLoggedIn) {
+      // If user is not logged in, redirect to login page
+      alert("Please log in to delete!");
+      history.push('/login');
+      return;
+    }
     const response = await fetch(`/fitness-activities/${id}`, {
       method: "DELETE",
-    });
+    });    
     if (response.ok) {
       handleDeleteActivity(id);
       alert("Deleted Successfully");

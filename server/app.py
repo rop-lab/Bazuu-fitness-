@@ -3,10 +3,10 @@
 # Standard library imports
 
 # Remote library imports
-from flask import Flask, jsonify, request, make_response, session
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_restful import Api, Resource
+from flask import Flask, jsonify, request, make_response, session # type: ignore
+from flask_cors import CORS # type: ignore
+from flask_migrate import Migrate # type: ignore
+from flask_restful import Api, Resource # type: ignore
 
 
 # Local imports
