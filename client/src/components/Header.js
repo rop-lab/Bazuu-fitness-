@@ -8,6 +8,7 @@ function Header() {
   const history = useHistory();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showUserDetails, setShowUserDetails] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -39,15 +40,20 @@ function Header() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const toggleUserDetails = () => {
+    setShowUserDetails(!showUserDetails);
+  };
+
   return (
     <header className="header">
       <div className="header-section">
-        <h1 className="header-title">
+        {/* Wrap the entire app title, including the logo, inside the Link component */}
+        <Link to="/" className="header-title">
           Bazuu Fitness
           <span className="logo" role="img">
             🏋️‍♂️
           </span>
-        </h1>
+        </Link>
       </div>
       <div className="head-right-section">
         <Link to="/" className="home-button">Home</Link>
@@ -77,6 +83,18 @@ function Header() {
             <Link to="/sign-up" className="home-button">Sign Up</Link>
           </>
         )}
+      </div>
+      <div className="user-details">
+        {showUserDetails && (
+          <div className="user-details-popup">
+            <p>Username: {username}</p>
+            <p>User ID: {userId}</p>
+            {/* Add more user details as needed */}
+          </div>
+        )}
+        <span className="username" onClick={toggleUserDetails}>
+          Show User Details
+        </span>
       </div>
       <ConfirmationDialog
         isOpen={isConfirmationOpen}
