@@ -92,8 +92,9 @@ function Header() {
             {/* Add more user details as needed */}
           </div>
         )}
+        {/* Bind toggleUserDetails directly to the onClick event of the username span */}
         <span className="username" onClick={toggleUserDetails}>
-          Show User Details
+          {username}
         </span>
       </div>
       <ConfirmationDialog
