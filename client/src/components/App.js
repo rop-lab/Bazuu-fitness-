@@ -5,6 +5,7 @@ import Header from './Header';
 import ActivityPage from './ActivityPage';
 import Login from './Login'; // Import the Login component
 import SignUp from './SignUp';
+import MyActivitiesPage from './MyActivitiesPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" exact component={ActivityPage} />
           <Route path="/login" component={Login} /> 
           <Route path="/sign-up" component={SignUp} /> 
+          <Route path="/my-activities" exact component={MyActivitiesPage} />
           {/* Add more routes here */}
         </Switch>
       </div>

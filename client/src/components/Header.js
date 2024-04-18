@@ -51,23 +51,27 @@ function Header() {
       </div>
       <div className="head-right-section">
         <Link to="/" className="home-button">Home</Link>
-        {isLoggedIn ? (
-          <div style={{ position: 'relative' }}>
-            <span 
-              className="username home-button" 
-              onClick={toggleDropdown}
-            >
-              <img src={userPicture} alt="User" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-              {username}
-            </span>
-            {isDropdownOpen && (
-              <div className="dropdown-menu" style={{ position: 'absolute', top: '100%', backgroundColor: '#333', padding: '10px', borderRadius: '5px', zIndex: 999 }}>
-                <button onClick={handleLogout} className="dropdown-button" >Logout</button>
-                <button onClick={handleDeleteAccount} className="dropdown-button ">Delete Account</button>
-              </div>
-            )}
+        {isLoggedIn && (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Link to="/my-activities" className="home-button">My Activities</Link>
+            <div style={{ position: 'relative' }}>
+              <span 
+                className="username home-button" 
+                onClick={toggleDropdown}
+              >
+                <img src={userPicture} alt="User" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+                {username}
+              </span>
+              {isDropdownOpen && (
+                <div className="dropdown-menu" style={{ position: 'absolute', top: '100%', backgroundColor: '#333', padding: '10px', borderRadius: '5px', zIndex: 999 }}>
+                  <button onClick={handleLogout} className="dropdown-button" >Logout</button>
+                  <button onClick={handleDeleteAccount} className="dropdown-button ">Delete Account</button>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
+        )}
+        {!isLoggedIn && (
           <>
             <Link to="/login" className="home-button">Login</Link>
             <Link to="/sign-up" className="home-button">Sign Up</Link>

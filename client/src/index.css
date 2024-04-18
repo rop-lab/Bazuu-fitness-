@@ -355,3 +355,12 @@ body {
 .signup-link a:hover {
   color: #555;
 }
+
+.owned-activities {
+  flex: 0.3;
+  margin-right: 20px;
+}
+
+.followed {
+  flex: 1; /* Set the default flex value for the followed activities section */
+}

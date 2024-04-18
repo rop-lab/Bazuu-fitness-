@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Combine useState and useEffect imports
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useHistory } from 'react-router-dom'; // Import useHistory hook to redirect
+import useAuthStore from "./authStore"; // Import useAuthStore hook
+
 
 function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) {
   const { id, title, picture, description, duration } = activity;
   const [showUpdateForm, setShowUpdateForm] = useState(false); // State to track whether to show the update form
+  const { isLoggedIn, userId, checkSession } = useAuthStore(); // Access the checkSession function from useAuthStore
+  const history = useHistory(); // Initialize useHistory hook
+
+  useEffect(() => {
+    checkSession(); // Check session when component mounts
+  }, [checkSession]);
 
   const initialValues = {
     description: description,
@@ -56,6 +65,43 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
     setShowUpdateForm(false);
   };
 
+ 
+  const handleLikeClick = async () => {
+    try {
+      if (!isLoggedIn) {
+        // If user is not logged in, redirect to login page
+        alert("Please log in to like!");
+        history.push('/login');
+        return;
+      }
+  
+      const userFitnessActivityResponse = await fetch("/user-fitness-activities", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          fitness_activity_id: id, // Use the activity ID directly from props
+          access: "follower",
+        }),
+      });
+  
+      if (!userFitnessActivityResponse.ok) {
+        // Handle error if adding user fitness activity fails
+        console.error("Error adding user fitness activity:", userFitnessActivityResponse.statusText);
+        return;
+      }
+  
+      // Notify user that the activity has been liked successfully
+      alert("Activity liked successfully!");
+  
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
+  };
+  
+
   return (
     <div>
       <li className="activity-card">
@@ -81,7 +127,10 @@ function ActivityCard({ activity, handleUpdateActivity, handleDeleteActivity }) 
             )}
           </Formik>
         ) : (
-          <button className="form-button" onClick={() => setShowUpdateForm(true)}>Update or Delete</button>
+          <div className="button-container">
+            <button className="form-button" onClick={() => setShowUpdateForm(true)}>Update or Delete</button>
+            <button type="button" className="form-button" onClick={handleLikeClick}>Like</button>
+          </div>
         )}
       </li>
     </div>
